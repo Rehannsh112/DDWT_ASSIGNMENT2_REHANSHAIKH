@@ -1,0 +1,246 @@
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("Mushroom");
+    var sql1 = "select * from Family";
+    var Families = db.Query(sql1);
+
+    if (IsPost)
+    {
+        var MushroomName = Request.Form["MushroomName"];
+        var CapColor = Request.Form["CapColor"];
+        var StemSurface = Request.Form["stemSurface"];
+        var GillSpacing = Request.Form["GillSpacing"];
+        var StemRoot = Request.Form["StemRoot"];
+        var Season = Request.Form["Season"];
+        var Shape = Request.Form["Shape"];
+        var VeilType = Request.Form["VeilType"];
+        var RingType = Request.Form["RingType"];
+        var Habitat = Request.Form["Habitat"];
+        dynamic isNewFamily = Request.Form["MushroomFamily"];
+
+        int temp = 0;
+
+        if (isNewFamily == "addNewFamily")
+        {
+            var newFamilyId = Families.Count() + 1;
+            var newFamilyName = Request.Form["NewFamily"];
+
+            var sql2 = "INSERT INTO Family (FamilyID, familyName) VALUES (@0, @1)";
+            var insertFamily = db.Execute(sql2, newFamilyId, newFamilyName);
+
+            if (insertFamily > 0)
+            {
+                temp = newFamilyId;
+            }
+        }
+        else
+        {
+            temp = Convert.ToInt32(isNewFamily);
+        }
+
+        var sql3 = "INSERT INTO Mushroom (MushroomFamily, name, cap_color, stem_surface, gillspacing, stemRoot, season, cap_shape, veil_type, ring_type, habitat) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10)";
+        var insertMushroom = db.Execute(sql3, temp, MushroomName, CapColor, StemSurface, GillSpacing, StemRoot, Season, Shape, VeilType, RingType, Habitat);
+
+        if (insertMushroom > 0)
+        {
+            <div class="alert alert-success">
+                Mushroom details have been successfully added. Redirecting to its family in 3 seconds...
+            </div>
+
+            <script>
+        setTimeout(function () {
+            window.location.href = '/Home/Mushroom?familyId=@temp';
+        }, 3000);
+            </script>
+        }
+    }
+}
+
+
+<h2>Record Mushroom</h2>
+<div class="container mt-5" id="addMushroom">
+    <form method="post" action="/Home/RecordMushroom">
+
+        <div class="mb-3">
+            <label for="MushroomName">Mushroom Name</label>
+            <input class="form-control" type="text" name="MushroomName" required>
+        </div>
+        <div class="form-group mb-2">
+            <label for="mushroomFamily">Mushroom Family</label>
+            <select class="form-control" id="mushroomFamily" required name="MushroomFamily" onchange="familySelectionChanged()">
+                <option value="" selected disabled>Select</option>
+                <option value="addNewFamily" style="font-weight:bold">Add New Family</option>
+                @foreach (var row in Families)
+                {
+                    <option value="@row.familyID">@row.familyName</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-2" id="newFamilyContainer" style="display:none;">
+            <label for="newFamily">New Family Name (if not listed):</label>
+            <input class="form-control" type="text" id="newFamily" name="NewFamily">
+        </div>
+
+        <div class="form-group row mb-2 mb-2">
+            <div class="col-md-6">
+                <label for="capColor">Cap Color:</label>
+                <select class="form-control" name="CapColor" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="b">Buff</option>
+                    <option value="e">Red</option>
+                    <option value="f">None</option>
+                    <option value="g">Gray</option>
+                    <option value="k">Black</option>
+                    <option value="l">Blue</option>
+                    <option value="n">Brown</option>
+                    <option value="o">Orange</option>
+                    <option value="p">Pink</option>
+                    <option value="r">Green</option>
+                    <option value="u">Purple</option>
+                    <option value="w">White</option>
+                    <option value="y">Yellow</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="stemSurface">Stem Surface:</label>
+                <select class="form-control" name="stemSurface" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="e">Fleshy</option>
+                    <option value="f">None</option>
+                    <option value="g">Grooves</option>
+                    <option value="h">Shiny</option>
+                    <option value="i">Fibrous</option>
+                    <option value="k">Silky</option>
+                    <option value="l">Leathery</option>
+                    <option value="s">Smooth</option>
+                    <option value="t">Sticky</option>
+                    <option value="w">Wrinkled</option>
+                    <option value="y">Scaly</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-2 mb-2">
+            <div class="col-md-6">
+                <label for="gillSpacing">Gill Spacing:</label>
+                <select class="form-control" name="GillSpacing" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="c">Close</option>
+                    <option value="d">Distant</option>
+                    <option value="f">None</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="stemRoot">Stem Root:</label>
+                <select class="form-control" name="StemRoot" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="b">Bulbous</option>
+                    <option value="c">Club</option>
+                    <option value="e">Equal</option>
+                    <option value="f">None</option>
+                    <option value="r">Rooted</option>
+                    <option value="s">Swollen</option>
+                    <option value="u">Cup</option>
+                    <option value="z">Rhizomorphs</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-2 mb-2">
+            <div class="col-md-6">
+                <label for="season">Season:</label>
+                <select class="form-control" name="Season" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="a">Autumn</option>
+                    <option value="s">Spring</option>
+                    <option value="u">Summer</option>
+                    <option value="w">Winter</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="shape">Shape:</label>
+                <select class="form-control" name="Shape" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="b">Bell</option>
+                    <option value="c">Conical</option>
+                    <option value="f">Flat</option>
+                    <option value="o">Others</option>
+                    <option value="p">Spherical</option>
+                    <option value="s">Sunken</option>
+                    <option value="x">Convex</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-2 ">
+            <div class="col-md-6">
+                <label for="veilType">Veil Type:</label>
+                <select class="form-control" name="VeilType" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="p">Partial</option>
+                    <option value="u">Universal</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="ringType">Ring Type:</label>
+                <select class="form-control" name="RingType" required>
+                    <option value="" selected disabled>Select</option>
+                    <option value="c">Cobwebby</option>
+                    <option value="e">Evanescent</option>
+                    <option value="f">None</option>
+                    <option value="g">Grooved</option>
+                    <option value="l">Large</option>
+                    <option value="m">Movable</option>
+                    <option value="p">Pendant</option>
+                    <option value="r">Flaring</option>
+                    <option value="s">Sheathing</option>
+                    <option value="y">Scaly</option>
+                    <option value="z">Zone</option>
+                    <option value="?">Unknown</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="habitat">Habitat:</label>
+            <select class="form-control" name="Habitat" required>
+                <option value="" selected disabled>Select</option>
+                <option value="d">Woods</option>
+                <option value="g">Grasses</option>
+                <option value="h">Heaths</option>
+                <option value="l">Leaves</option>
+                <option value="m">Meadows</option>
+                <option value="p">Paths</option>
+                <option value="u">Urban</option>
+                <option value="w">Waste</option>
+
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-success ">Submit</button>
+    </form>
+</div>
+
+<script>
+    function familySelectionChanged() {
+        var familySelect = document.getElementById('mushroomFamily');
+        var newFamilyContainer = document.getElementById('newFamilyContainer');
+
+        if (familySelect.value === 'addNewFamily') {
+            newFamilyContainer.style.display = 'block';
+        } else {
+            newFamilyContainer.style.display = 'none';
+        }
+    }
+</script>
+
+
+
+

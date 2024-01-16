@@ -1,0 +1,141 @@
+﻿
+.grid__item {
+    background-color: #fff;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.1);
+    transition: ease-out.2s;
+    margin-bottom:24px
+}
+
+.grid__item:hover {
+        transform: translateY(-1.5%);
+        box-shadow: 0 4rem 8rem rgba(0, 0, 0, 0.2);
+    }
+
+.card-img-top {
+    display: block;
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #0d0d0d;
+    margin-bottom: 1.5rem;
+
+}
+
+.card-text {
+    font-size: 1rem;
+    letter-spacing: 0.1rem;
+    line-height: 1.7;
+    color: #3d3d3d;
+    margin-bottom: 1.5rem;
+}
+
+.index-page .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    text-align: center;
+    color: #3363ff;
+    background-color: #e6ecff;
+    border: none;
+    border-radius: 0.4rem;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+    .index-page .btn-primary span {
+        margin-left: 1rem;
+        transition: 0.2s;
+    }
+
+    .index-page .btn-primary:hover,
+    .index-page .btn-primary:active {
+        background-color: #808080;
+    }
+
+        .index-page .btn-primary:hover span,
+        .index-page .btn-primary:active span {
+            margin-left: 1.5rem;
+        }
+
+
+.cards-section
+{
+    padding: 36px 0px
+}
+
+
+
+.index-page form {
+    display: flex;
+    flex-direction: row; 
+    width: 100%;
+    align-items: center
+}
+
+.index-page label {
+    margin-right: 10px;
+}
+
+.index-page input {
+    flex: 1; 
+    padding: 8px;
+    font-size: 14px;
+    margin-right: 10px;
+    border-radius:5px
+}
+
+.index-page select {
+    padding: 8px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.index-page button {
+    padding: 8px 15px;
+    font-size: 14px;
+}
+
+
+.mushroom-details .card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+    .mushroom-details .card:hover {
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        cursor: pointer
+    }
+.mushroom-details .card-header {
+    background-color: #555; /* Dark gray */
+    border-bottom: 1px solid #e9ecef;
+}
+
+.mushroom-details .card-title{
+    color:white
+}
+
+.mushroom-details .card-body {
+    background-color: #f4f4f4; 
+    color: #333; 
+    border-bottom: 1px solid #e9ecef;
+}
+
+#addMushroom label
+{
+    font-weight:bold;
+    margin-bottom:4px
+}

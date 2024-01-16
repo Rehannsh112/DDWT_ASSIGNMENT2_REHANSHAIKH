@@ -1,0 +1,224 @@
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("Mushroom");
+    var mushroomNameQuery = Request.QueryString["M_Name"];
+
+    var sql = "SELECT MushroomFamily, name, cap_color, stem_surface, gillspacing, stemRoot, season, cap_shape, veil_type, ring_type, habitat from Mushroom where name LIKE CONCAT('%', @0, '%')  ";
+    var data = db.QuerySingle(sql, mushroomNameQuery);
+
+    if (IsPost)
+    {
+        var CapColor = Request.Form["CapColor"];
+        var StemSurface = Request.Form["stemSurface"];
+        var GillSpacing = Request.Form["GillSpacing"];
+        var StemRoot = Request.Form["StemRoot"];
+        var Season = Request.Form["Season"];
+        var Shape = Request.Form["Shape"];
+        var VeilType = Request.Form["VeilType"];
+        var RingType = Request.Form["RingType"];
+        var Habitat = Request.Form["Habitat"];
+
+        var updateRecord = "UPDATE Mushroom SET " +
+            "cap_color = @0, " +
+            "stem_surface = @1, " +
+            "gillspacing = @2, " +
+            "stemRoot = @3, " +
+            "season = @4, " +
+            "cap_shape = @5, " +
+            "veil_type = @6, " +
+            "ring_type = @7, " +
+            "habitat = @8 " +
+            "WHERE name LIKE CONCAT('%', @9, '%')";
+
+        var uData = db.Execute(updateRecord,
+            CapColor,
+            StemSurface,
+            GillSpacing,
+            StemRoot,
+            Season,
+            Shape,
+            VeilType,
+            RingType,
+            Habitat,
+            mushroomNameQuery
+        );
+
+
+        if (uData > 0)
+        {
+
+            <div class="alert alert-success">Mushroom Details updated Successfully!</div>
+        }
+        else
+
+        {
+            <div class="alert alert-danger">Error in updating Details!</div>
+
+        }
+    }
+
+
+}
+
+
+
+<h2>Modify Details: @mushroomNameQuery</h2>
+<div class="container mt-5">
+    <form method="post" action="/Home/Modify">
+
+        <div class="mb-3">
+            <label for="MushroomName">Name</label>
+            <input class="form-control" value="@data.name" disabled type="text">
+        </div>
+
+        <div class="form-group row mb-2 mb-2">
+            <div class="col-md-6">
+                <label for="capColor">Cap Color:</label>
+                <select class="form-control" name="CapColor">
+                    <option value="" @(data.cap_color == "" ? "selected" : "") disabled>Select</option>
+                    <option value="b" @(data.cap_color == "b" ? "selected" : "")>Buff</option>
+                    <option value="e" @(data.cap_color == "e" ? "selected" : "")>Red</option>
+                    <option value="f" @(data.cap_color == "f" ? "selected" : "")>None</option>
+                    <option value="g" @(data.cap_color == "g" ? "selected" : "")>Gray</option>
+                    <option value="k" @(data.cap_color == "k" ? "selected" : "")>Black</option>
+                    <option value="l" @(data.cap_color == "l" ? "selected" : "")>Blue</option>
+                    <option value="n" @(data.cap_color == "n" ? "selected" : "")>Brown</option>
+                    <option value="o" @(data.cap_color == "o" ? "selected" : "")>Orange</option>
+                    <option value="p" @(data.cap_color == "p" ? "selected" : "")>Pink</option>
+                    <option value="r" @(data.cap_color == "r" ? "selected" : "")>Green</option>
+                    <option value="u" @(data.cap_color == "u" ? "selected" : "")>Purple</option>
+                    <option value="w" @(data.cap_color == "w" ? "selected" : "")>White</option>
+                    <option value="y" @(data.cap_color == "y" ? "selected" : "")>Yellow</option>
+                </select>
+
+            </div>
+
+            <div class="col-md-6">
+                <label for="stemSurface">Stem Surface:</label>
+                <select class="form-control" name="stemSurface">
+                    <option value="" @(data.stem_surface == "" ? "selected" : "") disabled>Select</option>
+                    <option value="e" @(data.stem_surface == "e" ? "selected" : "")>Fleshy</option>
+                    <option value="f" @(data.stem_surface == "f" ? "selected" : "")>None</option>
+                    <option value="g" @(data.stem_surface == "g" ? "selected" : "")>Grooves</option>
+                    <option value="h" @(data.stem_surface == "h" ? "selected" : "")>Shiny</option>
+                    <option value="i" @(data.stem_surface == "i" ? "selected" : "")>Fibrous</option>
+                    <option value="k" @(data.stem_surface == "k" ? "selected" : "")>Silky</option>
+                    <option value="l" @(data.stem_surface == "l" ? "selected" : "")>Leathery</option>
+                    <option value="s" @(data.stem_surface == "s" ? "selected" : "")>Smooth</option>
+                    <option value="t" @(data.stem_surface == "t" ? "selected" : "")>Sticky</option>
+                    <option value="w" @(data.stem_surface == "w" ? "selected" : "")>Wrinkled</option>
+                    <option value="y" @(data.stem_surface == "y" ? "selected" : "")>Scaly</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group row mb-2 mb-2">
+            <div class="col-md-6">
+                <label for="gillSpacing">Gill Spacing:</label>
+                <select class="form-control" name="GillSpacing">
+                    <option value="" @(data.gillspacing == "" ? "selected" : "") disabled>Select</option>
+                    <option value="c" @(data.gillspacing == "c" ? "selected" : "")>Close</option>
+                    <option value="d" @(data.gillspacing == "d" ? "selected" : "")>Distant</option>
+                    <option value="f" @(data.gillspacing == "f" ? "selected" : "")>None</option>
+                </select>
+
+            </div>
+
+            <div class="col-md-6">
+                <label for="stemRoot">Stem Root:</label>
+                <select class="form-control" name="StemRoot">
+                    <option value="" @(data.stemRoot == "" ? "selected" : "") disabled>Select</option>
+                    <option value="b" @(data.stemRoot == "b" ? "selected" : "")>Bulbous</option>
+                    <option value="c" @(data.stemRoot == "c" ? "selected" : "")>Club</option>
+                    <option value="e" @(data.stemRoot == "e" ? "selected" : "")>Equal</option>
+                    <option value="f" @(data.stemRoot == "f" ? "selected" : "")>None</option>
+                    <option value="r" @(data.stemRoot == "r" ? "selected" : "")>Rooted</option>
+                    <option value="s" @(data.stemRoot == "s" ? "selected" : "")>Swollen</option>
+                    <option value="u" @(data.stemRoot == "u" ? "selected" : "")>Cup</option>
+                    <option value="z" @(data.stemRoot == "z" ? "selected" : "")>Rhizomorphs</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-2 mb-2">
+            <div class="col-md-6">
+                <label for="season">Season:</label>
+                <select class="form-control" name="Season">
+                    <option value="" @(data.season == "" ? "selected" : "") disabled>Select</option>
+                    <option value="a" @(data.season == "a" ? "selected" : "")>Autumn</option>
+                    <option value="s" @(data.season == "s" ? "selected" : "")>Spring</option>
+                    <option value="u" @(data.season == "u" ? "selected" : "")>Summer</option>
+                    <option value="w" @(data.season == "w" ? "selected" : "")>Winter</option>
+                </select>
+
+            </div>
+
+            <div class="col-md-6">
+                <label for="shape">Shape:</label>
+                <select class="form-control" name="Shape">
+                    <option value="" @(data.cap_shape == "" ? "selected" : "") disabled>Select</option>
+                    <option value="b" @(data.cap_shape == "b" ? "selected" : "")>Bell</option>
+                    <option value="c" @(data.cap_shape == "c" ? "selected" : "")>Conical</option>
+                    <option value="f" @(data.cap_shape == "f" ? "selected" : "")>Flat</option>
+                    <option value="o" @(data.cap_shape == "o" ? "selected" : "")>Others</option>
+                    <option value="p" @(data.cap_shape == "p" ? "selected" : "")>Spherical</option>
+                    <option value="s" @(data.cap_shape == "s" ? "selected" : "")>Sunken</option>
+                    <option value="x" @(data.cap_shape == "x" ? "selected" : "")>Convex</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group row mb-2 ">
+            <div class="col-md-6">
+                <label for="veilType">Veil Type:</label>
+                <select class="form-control" name="VeilType">
+                    <option value="" @(data.veil_type == "" ? "selected" : "") disabled>Select</option>
+                    <option value="p" @(data.veil_type == "p" ? "selected" : "")>Partial</option>
+                    <option value="u" @(data.veil_type == "u" ? "selected" : "")>Universal</option>
+                </select>
+
+            </div>
+
+            <div class="col-md-6">
+                <label for="ringType">Ring Type:</label>
+                <select class="form-control" name="RingType">
+                    <option value="" @(data.ring_type == "" ? "selected" : "") disabled>Select</option>
+                    <option value="c" @(data.ring_type == "c" ? "selected" : "")>Cobwebby</option>
+                    <option value="e" @(data.ring_type == "e" ? "selected" : "")>Evanescent</option>
+                    <option value="f" @(data.ring_type == "f" ? "selected" : "")>None</option>
+                    <option value="g" @(data.ring_type == "g" ? "selected" : "")>Grooved</option>
+                    <option value="l" @(data.ring_type == "l" ? "selected" : "")>Large</option>
+                    <option value="m" @(data.ring_type == "m" ? "selected" : "")>Movable</option>
+                    <option value="p" @(data.ring_type == "p" ? "selected" : "")>Pendant</option>
+                    <option value="r" @(data.ring_type == "r" ? "selected" : "")>Flaring</option>
+                    <option value="s" @(data.ring_type == "s" ? "selected" : "")>Sheathing</option>
+                    <option value="y" @(data.ring_type == "y" ? "selected" : "")>Scaly</option>
+                    <option value="z" @(data.ring_type == "z" ? "selected" : "")>Zone</option>
+                    <option value="?" @(data.ring_type == "?" ? "selected" : "")>Unknown</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="habitat">Habitat:</label>
+            <select class="form-control" name="Habitat">
+                <option value="" @(data.habitat == "" ? "selected" : "") disabled>Select</option>
+                <option value="d" @(data.habitat == "d" ? "selected" : "")>Woods</option>
+                <option value="g" @(data.habitat == "g" ? "selected" : "")>Grasses</option>
+                <option value="h" @(data.habitat == "h" ? "selected" : "")>Heaths</option>
+                <option value="l" @(data.habitat == "l" ? "selected" : "")>Leaves</option>
+                <option value="m" @(data.habitat == "m" ? "selected" : "")>Meadows</option>
+                <option value="p" @(data.habitat == "p" ? "selected" : "")>Paths</option>
+                <option value="u" @(data.habitat == "u" ? "selected" : "")>Urban</option>
+                <option value="w" @(data.habitat == "w" ? "selected" : "")>Waste</option>
+            </select>
+
+        </div>
+        <a href="/Home/Mushroom?familyId=@data.MushroomFamily" class="btn btn-lg btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-lg btn-success ">Submit</button>
+    </form>
+</div>

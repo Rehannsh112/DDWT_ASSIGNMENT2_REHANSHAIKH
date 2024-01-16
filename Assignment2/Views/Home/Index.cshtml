@@ -1,0 +1,77 @@
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("Mushroom");
+
+    var sql = "SELECT * FROM Family";
+    var searchData = Request.Form["searchdata"];
+    var filterType = Request.Form["filtertype"];
+
+    var sql2 = "SELECT TOP 1 image FROM Mushroom where image is NOT NULL";
+    var image = db.QuerySingle(sql2).image;
+
+    if (!string.IsNullOrEmpty(searchData))
+    {
+        if (filterType == "familyId" && int.TryParse(searchData, out var familyId))
+        {
+            sql += " WHERE FamilyId = @0";
+            searchData = familyId.ToString();
+        }
+        else if (filterType == "familyName")
+        {
+            sql += " WHERE familyName LIKE CONCAT('%', @0, '%')";
+        }      
+    }
+
+    var output = db.Query(sql, searchData);
+
+
+}
+
+<div class="index-page">
+    <h2>Mushroom Family </h2>
+    <form method="post" action="/Home/Index">
+        <label>Filter by:</label>
+        <select name="filtertype">
+            <option value="familyId">Family ID</option>
+            <option selected value="familyName">Family Name</option>
+        </select>
+        <input type="text" value="@searchData" name="searchdata" placeholder="Search" />
+        <button type="submit" class="btn btn-outline-primary">Search</button>
+    </form>
+
+    <div class="cards-section">
+        <div class="row">
+            @{
+                if (output.Count() != 0)
+                {
+                    foreach (var row in output)
+                    {
+                        <div class="col-md-3">
+                            <div class="grid">
+                                <div class="grid__item">
+                                    <div class="card mb-4 border-0">
+                                        <img src="@image" class="card-img-top" alt=" image">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@row.familyName</h5>
+                                            <p class="card-text">Family ID: @row.FamilyId</p>
+
+                                            <a href="/Home/Mushroom?familyId=@row.FamilyId" class="btn btn-primary">Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+          
+                    <div class="alert alert-danger">
+                        <strong>No data found!</strong> for the search keyword. Please try again.
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

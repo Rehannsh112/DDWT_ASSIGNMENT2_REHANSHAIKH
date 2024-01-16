@@ -1,0 +1,67 @@
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("Mushroom");
+    var familyId = Request.QueryString["familyId"];
+    var sql = "SELECT " +
+          "m.name, s.SurfaceName, gs.SpacingName, sr.RootName," +
+          "m.capDiameterMin as mind,m.capDiameterMax as maxd, " +
+          "m.stemHeightMin as shm,m.stemHeightMax as shmx, " +
+          "(m.capDiameterMin + m.capDiameterMax) / 2 AS diameter, " +
+          "(m.stemHeightMin + m.stemHeightMax) / 2 AS stemHeight " +
+          "FROM Mushroom AS m " +
+          "LEFT JOIN Surface AS s ON m.stem_surface = s.SurfaceID " +
+          "LEFT JOIN GillSpacing AS gs ON m.gillspacing = gs.SpacingCode " +
+          "LEFT JOIN SteamRoot AS sr ON m.stemRoot = sr.RootCode " +
+          "WHERE m.MushroomFamily = @0";
+
+
+    var output = db.Query(sql, familyId);
+}
+
+<h2>FamilyID @familyId Details</h2>
+
+@{
+    foreach (var row in output)
+    {
+        string title = (row?.name != null && row.name != "") ? row.name : "NA";
+        string surface = (row?.SurfaceName != null && row.SurfaceName != "") ? row.SurfaceName : "NA";
+        string spacing = (row?.SpacingName != null && row.SpacingName != "") ? row.SpacingName : "NA";
+        string root = (row?.RootName != null && row.RootName != "") ? row.RootName : "NA";
+
+        string diameter = (row?.diameter != null && row.diameter != 0) ? $"{row.diameter} ({row.mind} X {row.maxd})" : "NA";
+        string stemHeight = (row?.stemHeight != null && row.stemHeight != 0) ? $"{row.stemHeight} ({row.shm} X {row.shmx})" : "NA";
+
+        <div class="mushroom-details">
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="card-title">@title</h6>
+                        <a href="/Home/Modify?M_Name=@title" class="btn btn-secondary">Edit &#128393;</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3"><h6>Surface</h6></div>
+                            <div class="col-sm-9">@surface</div>
+
+                            <div class="col-sm-3"><h6>Spacing</h6></div>
+                            <div class="col-sm-9">@spacing</div>
+
+                            <div class="col-sm-3"><h6>Steam Root</h6></div>
+                            <div class="col-sm-9">@root</div>
+
+                            <div class="col-sm-3"><h6>Average Diameter</h6></div>
+                            <div class="col-sm-9">@diameter</div>
+
+                            <div class="col-sm-3"><h6>Average Stem Height</h6></div>
+                            <div class="col-sm-9">@stemHeight</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    }
+}
+
